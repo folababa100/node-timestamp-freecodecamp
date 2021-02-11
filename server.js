@@ -1,5 +1,6 @@
 const express = require("express");
 const bodyParser = require("body-parser");
+const moment = require("moment");
 
 var app = express();
 
@@ -11,12 +12,20 @@ app.use(bodyParser.json());
 
 app.get("/api/timestamp/:date", (req, res) => {
   const { date } = req.params;
-
-  const newDateValue = new Date(Number(date));
+  const newDateValue = date
+    ? moment(Number(date))
+        .utcOffset(0)
+        // .format("ddd, D MMM YYYY, hh:mm:ss ZZ")
+        .toString()
+    : moment().utcOffset(0).toString();
+  console.log("newDateValue", newDateValue);
   res.send(
-    String(newDateValue) !== "Invalid Date"
-      ? { unix: Number(date), utc: String(newDateValue) }
-      : { utc: String(newDateValue) }
+    newDateValue !== "Invalid Date"
+      ? {
+          unix: Number(date),
+          utc: newDateValue.slice(0, newDateValue.length - 5),
+        }
+      : { utc: newDateValue.slice(0, newDateValue.length - 5) }
   );
 });
 
