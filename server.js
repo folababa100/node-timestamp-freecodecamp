@@ -25,7 +25,7 @@ app.get("/api/timestamp/:date", (req, res) => {
           unix: Number(date),
           utc: newDateValue.slice(0, newDateValue.length - 5),
         }
-      : { utc: "Invalid Date" }
+      : { error: "Invalid Date" }
   );
 });
 
