@@ -20,6 +20,6 @@ app.get("/api/timestamp/:date", (req, res) => {
   );
 });
 
-app.listen(PORT, () => {
+app.listen(process.env.PORT || 3000, () => {
   console.log(`Example app listening at http://localhost:${PORT}`);
-})
+});
