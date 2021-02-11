@@ -20,12 +20,12 @@ app.get("/api/timestamp/:date", (req, res) => {
     : moment().utcOffset(0).toString();
   console.log("newDateValue", newDateValue);
   res.send(
-    newDateValue !== "Invalid Date"
+    newDateValue !== "Invalid date"
       ? {
           unix: Number(date),
           utc: newDateValue.slice(0, newDateValue.length - 5),
         }
-      : { utc: newDateValue.slice(0, newDateValue.length - 5) }
+      : { utc: "Invalid date" }
   );
 });
 
