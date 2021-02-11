@@ -10,23 +10,23 @@ app.use(bodyParser.urlencoded({ extended: false }));
 
 app.use(bodyParser.json());
 
+app.get("/api/timestamp", (req, res) => {
+  res.json({ unix: Date.now(), utc: Date() })
+});
+
 app.get("/api/timestamp/:date", (req, res) => {
   const { date } = req.params;
-  const newDateValue = date
-    ? moment(Number(date))
-        .utcOffset(0)
-        // .format("ddd, D MMM YYYY, hh:mm:ss ZZ")
-        .toString()
-    : moment().utcOffset(0).toString();
-  console.log("newDateValue", newDateValue);
-  res.send(
-    newDateValue !== "Invalid date"
-      ? {
-          unix: Number(date),
-          utc: newDateValue.slice(0, newDateValue.length - 5),
-        }
-      : { error: "Invalid Date" }
-  );
+  if (/\d{5,}/.test(date)) {
+    const dateInt = parseInt(date);
+    res.json({ unix: dateInt, utc: new Date(dateInt).toUTCString() })
+  } else {
+    const newDateValue = new Date(date);
+    if (newDateValue.toString() === "Invalid Date") {
+      res.json({ error: "Invalid Date" });
+    } else {
+      res.json({ unix: newDateValue.valueOf(), utc: newDateValue.toUTCString() });
+    }
+  }
 });
 
 app.listen(process.env.PORT || 3000, () => {
